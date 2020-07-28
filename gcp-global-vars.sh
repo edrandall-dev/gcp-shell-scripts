@@ -1,6 +1,6 @@
 #!/bin/bash
 
-HOME_IP="$(host thelinuxnetwork.ddns.net | awk {'print $NF'})/32"
+HOME_IP="$(host XXXXXX.ddns.net | awk {'print $NF'})/32"
 
 PROJECT_NAME="coen-ed-randall"
 VPC="ed-wrdprs-vpc"
