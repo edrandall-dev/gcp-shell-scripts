@@ -8,6 +8,10 @@ run_and_show \
     gcloud config set project $PROJECT_NAME
 sleep 1
 
+#
+# Compute Section
+#
+
 #Create the US instance template
 run_and_show \
     gcloud compute instance-templates create www-us-template \
@@ -15,6 +19,7 @@ run_and_show \
         --network=$VPC \
         --subnet=$US_SUBNET_NAME \
         --tags=$SSH_FW_RULE_NAME \
+        --tags=$LB_FW_RULE_NAME \
         --image-family=debian-9 \
         --image-project=debian-cloud \
         --metadata=startup-script='#! /bin/bash
@@ -22,17 +27,20 @@ run_and_show \
             apt-get install apache2 -y
             a2ensite default-ssl
             a2enmod ssl
+            wget https://en-gb.wordpress.org/latest-en_GB.tar.gz
+            tar zxf latest-en_GB.tar.gz
+            mv wordpress/* /var/www/html
             vm_hostname="$(curl -H "Metadata-Flavor:Google" \
             http://169.254.169.254/computeMetadata/v1/instance/name)"
             echo "Page served from: $vm_hostname" | \
-            tee /var/www/html/index.html
+            tee /var/www/html/server.html
             systemctl restart apache2'
 sleep 1
 
 #Create managed instance group for template 
 run_and_show \
     gcloud compute instance-groups managed create ig-www-us \
-        --template=www-us-template --size=2 --zone=$US_REGION-b
+        --template=www-us-template --size=1 --zone=$US_REGION-b
 
 #Create the EU instance template
 run_and_show \
@@ -41,6 +49,7 @@ run_and_show \
         --network=$VPC \
         --subnet=$EU_SUBNET_NAME \
         --tags=$SSH_FW_RULE_NAME \
+        --tags=$LB_FW_RULE_NAME \
         --image-family=debian-9 \
         --image-project=debian-cloud \
         --metadata=startup-script='#! /bin/bash
@@ -48,27 +57,24 @@ run_and_show \
             apt-get install apache2 -y
             a2ensite default-ssl
             a2enmod ssl
+            wget https://en-gb.wordpress.org/latest-en_GB.tar.gz
+            tar zxf latest-en_GB.tar.gz
+            mv wordpress/* /var/www/html
             vm_hostname="$(curl -H "Metadata-Flavor:Google" \
             http://169.254.169.254/computeMetadata/v1/instance/name)"
             echo "Page served from: $vm_hostname" | \
-            tee /var/www/html/index.html
+            tee /var/www/html/server.html
             systemctl restart apache2'
 sleep 1
 
 #Create managed instance group for template 
 run_and_show \
     gcloud compute instance-groups managed create ig-www-eu \
-        --template=www-eu-template --size=2 --zone=$EU_REGION-b
+        --template=www-eu-template --size=1 --zone=$EU_REGION-b
 
 #
 # Load Balancer Section
 #
-
-#Reserve an IP address for the load balancer to use
-run_and_show \
-    gcloud compute addresses create lb-ipv4-1 \
-        --ip-version=IPV4 \
-        --global
 
 #Define HTTP service for the US and map a port name to the relevant port
 run_and_show \
@@ -119,11 +125,6 @@ run_and_show \
 run_and_show \
     gcloud compute url-maps create web-map \
         --default-service web-backend-service
-
-#Create a (google managed) SSL certificate
-run_and_show \
-    gcloud beta compute ssl-certificates create www-ssl-cert \
-    --domains www.edrandall.dev
 
 #Create a target HTTPS proxy to route requests to the URL map.
 run_and_show \

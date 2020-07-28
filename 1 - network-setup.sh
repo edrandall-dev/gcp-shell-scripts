@@ -50,3 +50,15 @@ run_and_show \
         --source-ranges=130.211.0.0/22,35.191.0.0/16 \
         --rules=tcp:80,tcp:443
 sleep 1
+
+# #Create a (google managed) SSL certificate
+# run_and_show \
+#     gcloud beta compute ssl-certificates create www-ssl-cert \
+#     --domains www.edrandall.dev
+# sleep 1
+
+# #Reserve a Public IP address for the load balancer to use
+# run_and_show \
+#     gcloud compute addresses create lb-ipv4-1 \
+#         --ip-version=IPV4 \
+#         --global
