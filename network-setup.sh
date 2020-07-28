@@ -18,7 +18,7 @@ run_and_show \
     gcloud compute networks subnets create $US_SUBNET_NAME \
         --network=$VPC \
         --range=$US_SUBNET_RANGE \
-        --region=us-east1
+        --region=$US_REGION
 sleep 1
 
 #Create the EU Subnet
@@ -26,7 +26,7 @@ run_and_show \
     gcloud compute networks subnets create $EU_SUBNET_NAME \
         --network=$VPC \
         --range=$EU_SUBNET_RANGE \
-        --region=europe-west2
+        --region=$EU_REGION
 sleep 1
 
 #Create SSH ingress FW Rule (from $HOME_IP)
