@@ -59,6 +59,9 @@ run_and_show \
         --image-family=debian-9 \
         --image-project=debian-cloud \
         --metadata=startup-script='#! /bin/bash
+            sleep 1
+            apt-get update
+            sleep 1
             apt-get install apache2 apache2-utils libapache2-mod-php php php-curl php-gd php-intl php-mbstring php-mysql php-soap php-xml php-xmlrpc php-zip -y
             a2dissite 000-default.conf
             a2enmod vhost_alias
