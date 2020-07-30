@@ -4,18 +4,12 @@
 . ./0-gcp-global-vars.sh
 
 #Ensure we're working with the correct project
-run_and_show \
+runprint\
     gcloud config set project $PROJECT_NAME
 sleep 1
 
-#These vars can go into global-vars later
-
-DB_INSTANCE="wrdprs-instance10"
-DB_NAME="wrdprs"
-WORDPRESS_DB_USER="wp_user"
-
 #Create the database instance
-run_and_show \
+runprint\
     gcloud beta sql instances create $DB_INSTANCE \
         --tier=db-f1-micro \
         --region=europe-west2 \
@@ -26,17 +20,25 @@ run_and_show \
         --availability-type ZONAL \
 
 #Create root user
-run_and_show \
-    gcloud sql users set-password root --host=% --instance $DB_INSTANCE --password 8IibuJnPMeALjhfduJnPMeALjh124
+runprint\
+    gcloud sql users set-password root --host=% --instance $DB_INSTANCE --password $DB_ROOT_PASSWORD
 
 #Create the Database
-run_and_show \
+runprint\
     gcloud beta sql databases create $DB_NAME --instance=$DB_INSTANCE 
 
-#Create the Wordpress DB User
-run_and_show \
-    gcloud sql users set-password $WORDPRESS_DB_USER --host=% --instance $DB_INSTANCE --password hfduJnPMeALPMeALj8IibuJnPM
+#Check if the wp-config file is actually in the current directory
+[ -f ./wp-config.php ] || { echo "Can't find wp-config.php file in the CWD. Manual intervention required to update the target DB IP"; exit 1; }
 
-#Print out the IP address of the database 
-run_and_show \
-    gcloud beta sql instances describe wrdprs-instance2 --format="get(ipAddresses[0].ipAddress)"
+#Change the IP address from OLD_IP to NEW_IP in the wp-config.php file in the current directory
+OLD_IP=$(grep -oE '\b([0-9]{1,3}\.){3}[0-9]{1,3}\b' wp-config.php)
+NEW_IP=$(gcloud beta sql instances describe $DB_INSTANCE --format="get(ipAddresses[0].ipAddress)")
+sed -ie "s/$OLD_IP/$NEW_IP/" wp-config.php
+
+echo -e "The OLD Database IP (in the local copy of wp-config.php) was:\t$OLD_IP"
+echo -e "The NEW IP (in the local copy of wp-config.php) is:\t$NEW_IP"
+
+#Maybe do something similar for the DB root password??
+
+#Copy the modified file into the bucket for the instances to pull down as part of their startup script
+gsutil cp ./wp-config.php gs://edrandall-dev/wordpress/ 

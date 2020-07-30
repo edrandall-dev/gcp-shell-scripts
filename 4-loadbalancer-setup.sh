@@ -4,34 +4,30 @@
 . ./0-gcp-global-vars.sh
 
 #Ensure we're working with the correct project
-run_and_show \
+runprint\
     gcloud config set project $PROJECT_NAME
 sleep 1
 
-#
-# Load Balancer Section
-#
-
 # #Define HTTP service for the US and map a port name to the relevant port
-# run_and_show \
+# runprint\
 #     gcloud compute instance-groups unmanaged set-named-ports ig-www-us \
 #     --named-ports http:80 \
 #     --zone=$US_REGION-b
 
 #Define HTTP service for the EU and map a port name to the relevant port
-run_and_show \
+runprint\
     gcloud compute instance-groups unmanaged set-named-ports ig-www-eu \
     --named-ports http:80 \
     --zone=$EU_REGION-b
 
 #Define a simple http health check
-run_and_show \
+runprint\
     gcloud compute health-checks create http http-basic-check \
         --port 80 \
         --request-path=/server.html
 
 #Create a simple backend service
-run_and_show \
+runprint\
     gcloud compute backend-services create web-backend-service \
         --global-health-checks \
         --protocol HTTP \
@@ -39,7 +35,7 @@ run_and_show \
         --global
     
 # #Add the US instance group as a backend
-# run_and_show \
+# runprint\
 #     gcloud compute backend-services add-backend web-backend-service \
 #         --balancing-mode=UTILIZATION \
 #         --max-utilization=0.8 \
@@ -49,7 +45,7 @@ run_and_show \
 #         --global
 
 #Add the EU instance group as a backend
-run_and_show \
+runprint\
     gcloud compute backend-services add-backend web-backend-service \
         --balancing-mode=UTILIZATION \
         --max-utilization=0.8 \
@@ -59,25 +55,25 @@ run_and_show \
         --global
 
 #Create a simple URL Map
-run_and_show \
+runprint\
     gcloud compute url-maps create web-map \
         --default-service web-backend-service
 
 #Create a target HTTPS proxy to route requests to the URL map.
-run_and_show \
+runprint\
     gcloud compute target-https-proxies create https-lb-proxy \
     --url-map web-map --ssl-certificates www-ssl-cert
 
 #Create a global forwarding rule to route incoming requests to the proxy
-run_and_show \
+runprint\
     gcloud compute forwarding-rules create https-content-rule \
         --address=lb-ipv4-1\
         --global \
         --target-https-proxy=https-lb-proxy \
         --ports=443
 
-#Finally, print the IP address from the load balancer
-run_and_show \
-    gcloud compute addresses describe lb-ipv4-1 \
-    --format="get(address)" \
-    --global
+# #Finally, print the IP address from the load balancer
+# runprint\
+#     gcloud compute addresses describe lb-ipv4-1 \
+#     --format="get(address)" \
+#     --global

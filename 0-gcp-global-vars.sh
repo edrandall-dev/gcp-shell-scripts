@@ -17,6 +17,10 @@ EU_SUBNET_RANGE="10.10.11.0/24"
 TCP_FW_RULE_HOME="all-tcp-from-home"
 LB_FW_RULE_NAME="wrdprs-allow-health-check-and-proxy"
 
+DB_INSTANCE="wrdprs-instance13"
+DB_NAME="wrdprs"
+DB_ROOT_PASSWORD="Az43423rhfduJnPMe3432432AfdsLPMeALj54328IibuJnPM"
+
 #Ensure gcloud is installed 
 if ! command -v gcloud &> /dev/null
 then
@@ -24,7 +28,7 @@ then
     exit 1
 fi
 
-run_and_show() 
+runprint() 
 { 
     echo -ne "\nDoing -->  "
     echo -ne "\033[7m$@\033[0m"

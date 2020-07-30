@@ -23,13 +23,13 @@
 define( 'DB_NAME', 'wrdprs' );
 
 /** MySQL database username */
-define( 'DB_USER', 'wp_user' );
+define( 'DB_USER', 'root' );
 
 /** MySQL database password */
-define( 'DB_PASSWORD', 'hfduJnPMeALPMeALj8IibuJnPM' );
+define( 'DB_PASSWORD', 'Az43423rhfduJnPMe3432432AfdsLPMeALj54328IibuJnPM' );
 
 /** MySQL hostname */
-define( 'DB_HOST', '10.1.32.3' );
+define( 'DB_HOST', '172.30.0.5' );
 
 /** Database Charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8mb4' );
