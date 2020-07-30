@@ -13,7 +13,7 @@ EU_REGION="europe-west2"
 EU_SUBNET_NAME="eu-wrdprs-subnet"
 EU_SUBNET_RANGE="10.10.11.0/24"
 
-SSH_FW_RULE_NAME="wrdprs-allow-ssh"
+TCP_FW_RULE_HOME="all-tcp-from-home"
 LB_FW_RULE_NAME="wrdprs-allow-health-check-and-proxy"
 
 #Ensure gcloud is installed 

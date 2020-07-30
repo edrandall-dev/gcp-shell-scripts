@@ -13,13 +13,13 @@ run_and_show \
     gcloud compute networks create $VPC --subnet-mode=custom
 sleep 1
 
-#Create the US SUBNET
-run_and_show \
-    gcloud compute networks subnets create $US_SUBNET_NAME \
-        --network=$VPC \
-        --range=$US_SUBNET_RANGE \
-        --region=$US_REGION
-sleep 1
+# #Create the US SUBNET
+# run_and_show \
+#     gcloud compute networks subnets create $US_SUBNET_NAME \
+#         --network=$VPC \
+#         --range=$US_SUBNET_RANGE \
+#         --region=$US_REGION
+# sleep 1
 
 #Create the EU Subnet
 run_and_show \
@@ -29,16 +29,16 @@ run_and_show \
         --region=$EU_REGION
 sleep 1
 
-#Create SSH ingress FW Rule (from $HOME_IP)
+#Create FW rule to allow all trafic to hosts with this tag from home
 run_and_show \
-    gcloud compute firewall-rules create $SSH_FW_RULE_NAME \
+    gcloud compute firewall-rules create $TCP_FW_RULE_HOME \
+        --direction=INGRESS \
+        --priority=1000 \
         --network=$VPC \
-        --action=allow \
-        --direction=ingress \
-        --target-tags=$SSH_FW_RULE_NAME \
+        --action=ALLOW \
+        --rules=tcp \
         --source-ranges=$HOME_IP \
-        --rules=tcp:22
-sleep 1
+        --target-tags=$TCP_FW_RULE_HOME
 
 #Create FW rule to allow google lb health checks
 run_and_show \
@@ -51,14 +51,39 @@ run_and_show \
         --rules=tcp:80,tcp:443
 sleep 1
 
-#Create a (google managed) SSL certificate
-run_and_show \
-    gcloud beta compute ssl-certificates create www-ssl-cert \
-    --domains www.edrandall.dev
-sleep 1
 
-#Reserve a Public IP address for the load balancer to use
+#Configuring private services access for Cloud SQL: 1 - Allocating an IP address range
 run_and_show \
-    gcloud compute addresses create lb-ipv4-1 \
-        --ip-version=IPV4 \
-        --global
+    gcloud compute addresses create google-managed-services-$VPC \
+        --global \
+        --purpose=VPC_PEERING \
+        --prefix-length=16 \
+        --network=$VPC \
+        --project=$PROJECT_NAME
+
+#Configuring private services access for Cloud SQL: 2 - Create the Private Connection
+run_and_show \
+    gcloud services vpc-peerings connect \
+        --service=servicenetworking.googleapis.com \
+        --ranges=google-managed-services-$VPC \
+        --network=$VPC \
+        --project=$PROJECT_NAME
+
+
+# #Create a (google managed) SSL certificate
+# run_and_show \
+#     gcloud beta compute ssl-certificates create www-ssl-cert \
+#     --domains www.edrandall.dev
+# sleep 1
+
+# #Reserve a Public IP address for the load balancer to use
+# run_and_show \
+#     gcloud compute addresses create lb-ipv4-1 \
+#         --ip-version=IPV4 \
+#         --global
+
+# #Finally, print the IP address from the load balancer
+# run_and_show \
+#     gcloud compute addresses describe lb-ipv4-1 \
+#     --format="get(address)" \
+#     --global
