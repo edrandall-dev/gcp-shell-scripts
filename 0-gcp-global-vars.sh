@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#Change the following variable to a source IP as required
 HOME_IP="$(host thelinuxnetwork.ddns.net | awk {'print $NF'})/32"
 
 PROJECT_NAME="coen-ed-randall"

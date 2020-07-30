@@ -10,7 +10,7 @@ sleep 1
 
 #These vars can go into global-vars later
 
-DB_INSTANCE="wrdprs-instance5"
+DB_INSTANCE="wrdprs-instance10"
 DB_NAME="wrdprs"
 WORDPRESS_DB_USER="wp_user"
 
@@ -35,7 +35,7 @@ run_and_show \
 
 #Create the Wordpress DB User
 run_and_show \
-    gcloud sql users set-password $WORDPRESS_DB_USER--host=% --instance $DB_INSTANCE --password hfduJnPMeALPMeALj8IibuJnPM
+    gcloud sql users set-password $WORDPRESS_DB_USER --host=% --instance $DB_INSTANCE --password hfduJnPMeALPMeALj8IibuJnPM
 
 #Print out the IP address of the database 
 run_and_show \
