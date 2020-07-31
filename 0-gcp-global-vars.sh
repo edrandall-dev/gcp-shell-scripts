@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Change the following variable to a source IP as required
-HOME_IP="$(host thelinuxnetwork.ddns.net | awk {'print $NF'})/32"
+HOME_IP="$(host myddnsdomaingoeshere.ddns.net | awk {'print $NF'})/32"
 
 PROJECT_NAME="coen-ed-randall"
 VPC="ed-wrdprs-vpc"
@@ -19,7 +19,7 @@ LB_FW_RULE_NAME="wrdprs-allow-health-check-and-proxy"
 
 DB_INSTANCE="wrdprs-instance13"
 DB_NAME="wrdprs"
-DB_ROOT_PASSWORD="Az43423rhfduJnPMe3432432AfdsLPMeALj54328IibuJnPM"
+DB_ROOT_PASSWORD="passwordgoesherebutthisisntit"
 
 #Ensure gcloud is installed 
 if ! command -v gcloud &> /dev/null
