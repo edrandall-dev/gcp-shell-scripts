@@ -26,7 +26,7 @@ define( 'DB_NAME', 'wrdprs' );
 define( 'DB_USER', 'root' );
 
 /** MySQL database password */
-define( 'DB_PASSWORD', 'Az43423rhfduJnPMe3432432AfdsLPMeALj54328IibuJnPM' );
+define( 'DB_PASSWORD', 'passwordgoesherebutthisisntit' );
 
 /** MySQL hostname */
 define( 'DB_HOST', '172.30.0.5' );
