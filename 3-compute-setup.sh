@@ -64,7 +64,7 @@ runprint\
             gsutil cp gs://edrandall-dev/wordpress/wordpress.conf /etc/apache2/sites-available/
             a2ensite wordpress
             rm -rf /var/www/html/
-            wget -q qhttps://en-gb.wordpress.org/latest-en_GB.tar.gz
+            wget -q https://en-gb.wordpress.org/latest-en_GB.tar.gz
             tar zxf latest-en_GB.tar.gz
             mkdir /var/www/wordpress
             mv wordpress/* /var/www/wordpress/
