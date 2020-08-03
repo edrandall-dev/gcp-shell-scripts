@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Change the following variable to a source IP as required
-HOME_IP="$(host thelinuxnetwork.ddns.net | awk {'print $NF'})/32"
+HOME_IP="$(host myddnsdomaingoeshere.ddns.net | awk {'print $NF'})/32"
 
 PROJECT_NAME="coen-ed-randall"
 VPC="$PROJECT_NAME-vpc"
