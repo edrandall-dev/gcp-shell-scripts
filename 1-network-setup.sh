@@ -86,7 +86,3 @@ runprint \
     gcloud compute addresses create lb-ipv4-1 \
         --ip-version=IPV4 \
         --global
-
-#Finally, print the IP address from the load balancer
-echo -ne "The Load Balancer's external IP address is: "
-gcloud compute addresses describe lb-ipv4-1 --format="get(address)" --global

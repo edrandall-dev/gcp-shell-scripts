@@ -54,12 +54,12 @@ runprint \
         --instance-group-zone=$EU_REGION-b \
         --global
 
-#Create a simple URL Map
+#Create a simple https URL Map
 runprint \
     gcloud compute url-maps create web-map-https \
         --default-service web-backend-service
 
-#Create a target HTTPS proxy to route requests to the URL map.
+#Create a target HTTPS proxy to route requests to the https URL map.
 runprint \
     gcloud compute target-https-proxies create https-lb-proxy \
     --url-map web-map-https --ssl-certificates edrandall-ssl-cert,www-edrandall-ssl-cert
@@ -81,19 +81,27 @@ defaultUrlRedirect:
 EOF
 
 #Create the HTTP load balancer's URL map by importing the YAML file. The name for this URL map is web-map-http.
-gcloud compute url-maps import web-map-http \
-    --source ./web-map-http.yaml \
-    --global
+runprint \
+    gcloud compute url-maps import web-map-http \
+        --source ./web-map-http.yaml \
+        --global
 
 #Remove the yaml file after creation
-rm -f ./web-map-http.yaml
+runprint \
+    rm -f ./web-map-http.yaml
+
+#Inserting a 20 second sleep, to ensure that web-map-http is ready
+runprint \
+    sleep 20
 
 #Create a new target HTTP proxy, using web-map-http as the URL map.
-gcloud compute target-http-proxies create http-lb-proxy \
-    --url-map=web-map-http \
-    --global
+runprint \
+    gcloud compute target-http-proxies create http-lb-proxy \
+        --url-map=web-map-http \
+        --global
 
 #Create a global forwarding rule to route incoming requests to the proxy.
+runprint\
     gcloud compute forwarding-rules create http-content-rule \
         --address=lb-ipv4-1\
         --global \
@@ -124,7 +132,3 @@ runprint \
     gcloud compute backend-services update web-backend-service \
     --security-policy=$PROJECT_NAME-lb-policy-dd \
     --global
-
-#Finally, print the IP address from the load balancer
-echo -ne "The Load Balancer's external IP address is: "
-gcloud compute addresses describe lb-ipv4-1 --format="get(address)" --global
