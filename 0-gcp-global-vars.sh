@@ -17,7 +17,7 @@ EU_SUBNET_RANGE="10.10.11.0/24"
 TCP_FW_RULE_HOME="all-tcp-from-home"
 LB_FW_RULE_NAME="wrdprs-allow-health-check-and-proxy"
 
-DB_INSTANCE="wrdprs-instance16"
+DB_INSTANCE="$PROJECT_NAME-$(date +%F-%H%M)"
 DB_NAME="wrdprs"
 DB_ROOT_PASSWORD="Az432AfdsL45654756PMeALj54343423uJnPMe343243j54328IibuJnPM"
 
