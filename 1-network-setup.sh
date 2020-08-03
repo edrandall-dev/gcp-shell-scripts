@@ -72,13 +72,13 @@ runprint \
 runprint \
     gcloud beta compute ssl-certificates create www-edrandall-ssl-cert \
     --domains www.edrandall.uk
-sleep 1
+
 
 #Create a (google managed) SSL certificate
 runprint \
     gcloud beta compute ssl-certificates create edrandall-ssl-cert \
     --domains edrandall.uk
-sleep 1
+
 
 
 #Reserve a Public IP address for the load balancer to use

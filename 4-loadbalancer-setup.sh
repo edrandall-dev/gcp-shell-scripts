@@ -62,7 +62,7 @@ runprint \
 #Create a target HTTPS proxy to route requests to the URL map.
 runprint \
     gcloud compute target-https-proxies create https-lb-proxy \
-    --url-map web-map-https --ssl-certificates www-ssl-cert
+    --url-map web-map-https --ssl-certificates edrandall-ssl-cert,www-edrandall-ssl-cert
 
 #Create a global forwarding rule to route incoming requests to the proxy
 runprint \
