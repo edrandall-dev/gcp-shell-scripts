@@ -26,10 +26,10 @@ define( 'DB_NAME', 'wrdprs' );
 define( 'DB_USER', 'root' );
 
 /** MySQL database password */
-define( 'DB_PASSWORD', 'passwordgoesherebutthisisntit' );
+define( 'DB_PASSWORD', "$DB_PASSWORD" );
 
 /** MySQL hostname */
-define( 'DB_HOST', '172.30.0.5' );
+define( 'DB_HOST', '10.11.0.3' );
 
 /** Database Charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8mb4' );
