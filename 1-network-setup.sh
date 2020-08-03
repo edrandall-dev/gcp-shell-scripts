@@ -88,5 +88,5 @@ runprint \
         --global
 
 #Finally, print the IP address from the load balancer
-echo -ne "The New Load Balancer IP address is: "
+echo -ne "The Load Balancer's external IP address is: "
 gcloud compute addresses describe lb-ipv4-1 --format="get(address)" --global

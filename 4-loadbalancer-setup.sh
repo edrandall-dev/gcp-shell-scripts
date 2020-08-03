@@ -125,8 +125,6 @@ runprint \
     --security-policy=$PROJECT_NAME-lb-policy-dd \
     --global
 
-# #Finally, print the IP address from the load balancer
-# runprint \
-#     gcloud compute addresses describe lb-ipv4-1 \
-#     --format="get(address)" \
-#     --global
+#Finally, print the IP address from the load balancer
+echo -ne "The Load Balancer's external IP address is: "
+gcloud compute addresses describe lb-ipv4-1 --format="get(address)" --global
