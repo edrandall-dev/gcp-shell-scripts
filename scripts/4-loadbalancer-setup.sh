@@ -122,13 +122,13 @@ showrun \
 showrun \
     gcloud compute security-policies rules create 3 \
     --security-policy $PROJECT_NAME-lb-policy \
-    --expression "!inIpRange(origin.ip, '82.22.123.140/32')" \
+    --expression "!inIpRange(origin.ip, 'XX.XX.XX.XX/32')" \
     --action "deny-404"
 
 # showrun \
 #     gcloud compute security-policies rules create 1 \
 #     --security-policy $PROJECT_NAME-lb-policy \
-#     --expression "!inIpRange(origin.ip, '82.22.123.140/32') && request.path.matches('/wp-admin/')" \
+#     --expression "!inIpRange(origin.ip, 'XX.XX.XX.XX/32') && request.path.matches('/wp-admin/')" \
 #     --action "deny-404"
 
 # showrun \
