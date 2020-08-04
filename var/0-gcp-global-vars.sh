@@ -3,7 +3,7 @@
 #Change the following variable to a source IP as required
 HOME_IP="$(host XXXXXX.ddns.net | awk {'print $NF'})/32"
 
-PROJECT_NAME="coen-ed-randall"
+PROJECT_NAME="XXXX-XX-XXXXXX"
 VPC="$PROJECT_NAME-vpc"
 
 DATETIME=$(date +%F-%H%M)
