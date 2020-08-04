@@ -8,14 +8,17 @@ runprint \
     gcloud config set project $PROJECT_NAME
 sleep 1
 
+#Create Security Policy
 runprint \
     gcloud compute security-policies create $PROJECT_NAME-lb-policy
 
+#Attach policy to web-backend-service
 runprint \
     gcloud compute backend-services update web-backend-service \
     --security-policy=$PROJECT_NAME-lb-policy \
     --global
-
+    
+#Only Allow traffic from Home
 runprint \
     gcloud compute security-policies rules create 3 \
     --security-policy $PROJECT_NAME-lb-policy \

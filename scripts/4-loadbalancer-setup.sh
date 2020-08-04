@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Source the global variables
-. ./0-gcp-global-vars.sh
+. var/0-gcp-global-vars.sh
 
 #Ensure we're working with the correct project
 runprint \
@@ -108,27 +108,32 @@ runprint\
         --target-http-proxy=http-lb-proxy \
         --ports=80
 
-#Create security policy to enable "development-mode" - only allow traffic from specific IP
+#Create Security Policy
 runprint \
-    gcloud compute security-policies create $PROJECT_NAME-lb-policy-dd
+    gcloud compute security-policies create $PROJECT_NAME-lb-policy
 
-#Add rule 0 to policy (Allow traffic from $HOME_IP)
-runprint \
-    gcloud compute security-policies rules create 0 \
-    --action=allow \
-    --security-policy=$PROJECT_NAME-lb-policy-dd \
-    --description=allow-from-home \
-    --src-ip-ranges=$HOME_IP
-
-#Add default rule to policy (Deny all other traffic)
-runprint \
-    gcloud compute security-policies rules create 1000 \
-    --action=deny-403 --security-policy=$PROJECT_NAME-lb-policy-dd \
-    --description="Default rule, higher priority overrides it" \
-    --src-ip-ranges=\*
-
-#Attach this rule to the web-backend-service
+#Attach policy to web-backend-service
 runprint \
     gcloud compute backend-services update web-backend-service \
-    --security-policy=$PROJECT_NAME-lb-policy-dd \
+    --security-policy=$PROJECT_NAME-lb-policy \
     --global
+    
+#Only Allow traffic from Home
+runprint \
+    gcloud compute security-policies rules create 3 \
+    --security-policy $PROJECT_NAME-lb-policy \
+    --expression "!inIpRange(origin.ip, '82.22.123.140/32')" \
+    --action "deny-404"
+
+# runprint \
+#     gcloud compute security-policies rules create 1 \
+#     --security-policy $PROJECT_NAME-lb-policy \
+#     --expression "!inIpRange(origin.ip, '82.22.123.140/32') && request.path.matches('/wp-admin/')" \
+#     --action "deny-404"
+
+# runprint \
+#     gcloud compute security-policies rules create 9999 \
+#     --security-policy=$PROJECT_NAME-lb-policy \
+#     --description="Default rule, higher priority overrides it" \
+#     --src-ip-ranges=\* \
+#     --action=deny-403 

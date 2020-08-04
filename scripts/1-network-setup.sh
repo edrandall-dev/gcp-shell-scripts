@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Source the global variables
-. ./0-gcp-global-vars.sh
+. vars/0-gcp-global-vars.sh
 
 #Ensure we're working with the correct project
 runprint \
