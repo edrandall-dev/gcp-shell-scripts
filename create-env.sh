@@ -34,5 +34,5 @@ echo -ne "The Load Balancer's external IP address is: "
 gcloud compute addresses describe lb-ipv4-1 --format="get(address)" --global
 echo
 echo "The following records are set in public DNS:"
-host edrandall.uk | grep has
-host www.edrandall.uk | grep has
+host XXXXXX.uk | grep has
+host www.XXXXXX.uk | grep has
