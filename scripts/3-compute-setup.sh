@@ -4,12 +4,12 @@
 . var/0-gcp-global-vars.sh
 
 #Ensure we're working with the correct project
-runprint\
+showrun \
     gcloud config set project $PROJECT_NAME
 sleep 1
 
 # #Create the US instance template
-# runprint\
+# showrun \
 #     gcloud compute instance-templates create www-us-template \
 #         --region=$US_REGION \
 #         --network=$VPC \
@@ -41,12 +41,12 @@ sleep 1
 # sleep 1
 
 # #Create managed instance group for template 
-# runprint\
+# showrun \
 #     gcloud compute instance-groups managed create ig-www-us \
 #         --template=www-us-template --size=1 --zone=$US_REGION-b
 
 #Create the EU instance template
-runprint\
+showrun \
     gcloud compute instance-templates create www-eu-template \
         --region=$EU_REGION \
         --network=$VPC \
@@ -81,6 +81,6 @@ runprint\
 sleep 1
 
 #Create managed instance group for template 
-runprint\
+showrun \
     gcloud compute instance-groups managed create ig-www-eu \
         --template=www-eu-template --size=1 --zone=$EU_REGION-b

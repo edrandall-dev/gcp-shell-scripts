@@ -1,15 +1,15 @@
 #!/bin/bash
 
 #Source the global variables
-. vars/0-gcp-global-vars.sh
+. var/0-gcp-global-vars.sh
 
 #Ensure we're working with the correct project
-runprint\
+showrun \
     gcloud config set project $PROJECT_NAME
 sleep 1
 
 #Create the database instance
-runprint\
+showrun \
     gcloud beta sql instances create $DB_INSTANCE \
         --tier=db-f1-micro \
         --region=europe-west2 \
@@ -22,18 +22,18 @@ runprint\
 [ $? = 0 ] || { echo -e "\n*** Exiting due to error, does the DB instance name need to be incremented?. ***\n" ; exit 1 ;} ;
 
 #Create root user
-runprint\
+showrun \
     gcloud sql users set-password root --host=% --instance $DB_INSTANCE --password $DB_ROOT_PASSWORD
 
 #Create the Database
-runprint\
+showrun \
     gcloud beta sql databases create $DB_NAME --instance=$DB_INSTANCE 
 
 #Output the new database ip address to the varitable DB_IP, for later substitution
 DB_IP=$(gcloud beta sql instances describe $DB_INSTANCE --format="get(ipAddresses[0].ipAddress)")
 
 #Create a wp-config.php file, ready for the IP address and DB Root Password to be added with 'sed -e' in the next step
-cat << 'EOF' > wp-config.php
+cat << 'EOF' > tmp/wp-config.php
 <?php
 
 // ** MySQL settings - You can get this info from your web host ** //
@@ -78,11 +78,11 @@ require_once ABSPATH . 'wp-settings.php';
 EOF
 
 #Replace the IP and the DB_ROOT_PW in the file we've just created
-sed -ie "s/DB_ROOT_PASSWORD_GOES_HERE/$DB_ROOT_PASSWORD/" wp-config.php
-sed -ie "s/DB_IP_ADDRESS_GOES_HERE/$DB_IP/" wp-config.php
+sed -ie "s/DB_ROOT_PASSWORD_GOES_HERE/$DB_ROOT_PASSWORD/" tmp/wp-config.php
+sed -ie "s/DB_IP_ADDRESS_GOES_HERE/$DB_IP/" tmp/wp-config.php
 
 #Copy the wp-config.php file into the bucket for the instances to pull down as part of their startup script
-gsutil cp ./wp-config.php gs://edrandall-dev/wordpress/
+gsutil cp tmp/wp-config.php gs://edrandall-dev/wordpress/
 
 #Remove the local copy of ./wp-config.php
-rm -f ./wp-config.php
+rm -f tmp/wp-config.php
