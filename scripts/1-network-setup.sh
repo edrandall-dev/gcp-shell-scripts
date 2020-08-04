@@ -70,16 +70,14 @@ showrun \
 
 #Create a (google managed) SSL certificate
 showrun \
-    gcloud beta compute ssl-certificates create www-edrandall-ssl-cert \
-    --domains www.edrandall.uk
+    gcloud beta compute ssl-certificates create www-XXXXXX-ssl-cert \
+    --domains www.XXXXXX.uk
 
 
 #Create a (google managed) SSL certificate
 showrun \
-    gcloud beta compute ssl-certificates create edrandall-ssl-cert \
-    --domains edrandall.uk
-
-
+    gcloud beta compute ssl-certificates create XXXXXX-ssl-cert \
+    --domains XXXXXX.uk
 
 #Reserve a Public IP address for the load balancer to use
 showrun \
